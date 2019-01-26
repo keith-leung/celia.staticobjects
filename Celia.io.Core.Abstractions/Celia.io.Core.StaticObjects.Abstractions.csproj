@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>0.1.0</Version>
+    <Authors>Keith Leung</Authors>
+    <Company>dotnet.ai</Company>
+    <Product>Celia.io.Core.StaticObjects</Product>
+    <PackageProjectUrl>https://github.com/keith-leung/celia.staticobjects</PackageProjectUrl>
+    <Description>A part of my Celia.io.Core platform. A project for manage static objects in various cloud blob storages. Use this project for a sub-system to keep the static files in cheap blob storage and use CDN to public delivery. 
+
+This is a nuget package project for entities only.</Description>
+    <RepositoryUrl>https://github.com/keith-leung/celia.staticobjects</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <ApplicationIcon>bzg.64px.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.3.0" />
+  </ItemGroup>
+
+</Project>
