@@ -1,4 +1,5 @@
-﻿using Celia.io.Core.StaticObjects.Abstractions;
+﻿using BR.MicroServices.Utilities;
+using Celia.io.Core.StaticObjects.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -11,6 +12,8 @@ namespace Celia.io.Core.StaticObjects.DataAccess
         {
 
         }
+
+        public DbSet<MigrationVersion> MigrationVersions { get; set; }
 
         public DbSet<ServiceApp> ServiceApps { get; set; }
 
