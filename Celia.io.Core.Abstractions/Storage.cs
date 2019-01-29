@@ -44,7 +44,7 @@ namespace Celia.io.Core.StaticObjects.Abstractions
 
         [Required]
         [Column("publish_storage_access_key")]
-        [MaxLength(255)]
+        [MaxLength(1024)]
         public string PublishStorageAccessKey { get; set; }
 
         [Required]
