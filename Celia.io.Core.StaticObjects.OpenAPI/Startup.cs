@@ -34,12 +34,14 @@ namespace Celia.io.Core.StaticObjects.OpenAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+            services.AddMvc(options=>
+                options.Filters.Add(typeof(OpenApiAuthFilter)))
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                .AddJsonOptions(setupAction =>
                {
                    setupAction.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                    setupAction.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
-               });
+               }); 
 
             string connectionString = Configuration.GetConnectionString(
                 "DefaultConnectionString");
