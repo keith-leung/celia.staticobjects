@@ -26,6 +26,11 @@ namespace Celia.io.Core.StaticObjects.Services.Impl
             this._repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
+        public Task<string> AddImgRelationsAsync(string imgId, string objectId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<ImageGroup> FindImgByIdAsync(string objectId)
         {
             ImageElement element = _repository.FindImageElementById(objectId);

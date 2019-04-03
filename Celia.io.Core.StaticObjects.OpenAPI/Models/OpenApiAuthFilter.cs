@@ -1,6 +1,5 @@
-﻿using BR.Auths.Abstractions.ResponseDTOs;
-using BR.Auths.SDK;
-using BR.MicroServices.Utilities;
+﻿using Celia.io.Core.MicroServices.Utilities;
+using Celia.io.Core.StaticObjects.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json.Linq;
@@ -10,13 +9,13 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace BR.MsgHub.OpenApi.Models
+namespace Celia.io.Core.StaticObjects.Models
 {
     public class OpenApiAuthFilter : IAuthorizationFilter
     {
-        private OpenAppAuthService _authService = null;
+        private IOpenAppAuthService _authService = null;
 
-        public OpenApiAuthFilter(OpenAppAuthService authService)
+        public OpenApiAuthFilter(IOpenAppAuthService authService)
         {
             _authService = authService;
         }
@@ -42,7 +41,7 @@ namespace BR.MsgHub.OpenApi.Models
                 if (string.IsNullOrEmpty(appid) || string.IsNullOrEmpty(tsStr)
                     || string.IsNullOrEmpty(sign))
                 {
-                    ResponseResult result = new ResponseResult();
+                    ResponseResult<string> result = new ResponseResult<string>();
                     result.Code = (int)HttpStatusCode.Forbidden;
                     context.Result = new JsonResult(result);
                     //context.Result = new ForbidResult();
@@ -55,7 +54,7 @@ namespace BR.MsgHub.OpenApi.Models
                     appid, ts, sign, context.HttpContext.Request.Path.Value);
                 asyncResult.Wait();
 
-                ActionResponseResult authResult = asyncResult.Result;
+                ResponseResult<string> authResult = asyncResult.Result;
                 if (authResult.Code != 200)
                 {
                     context.Result = new JsonResult(authResult);

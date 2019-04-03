@@ -2,10 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Celia.io.Core.MicroServices.Utilities;
+using Celia.io.Core.StaticObjects.DataAccess;
+using Celia.io.Core.StaticObjects.Models;
+using Celia.io.Core.StaticObjects.OpenAPI.Models;
+using Celia.io.Core.StaticObjects.Services;
+using Celia.io.Core.StaticObjects.Services.Impl;
+using Celia.io.Core.StaticObjects.StorageProviders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -45,16 +53,22 @@ namespace Celia.io.Core.StaticObjects.OpenAPI
 
             string connectionString = Configuration.GetConnectionString(
                 "DefaultConnectionString");
+            bool isDebugMode = Configuration.GetValue<bool>("IsDebugMode");
+             
+            //var signKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(
+            //        Configuration.GetValue<string>("SigningCredentials:Key")));
 
-            var signKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(
-                    Configuration.GetValue<string>("SigningCredentials:Key")));
+            //SigningCredentials signingCredentials = new SigningCredentials(signKey,
+            //    SecurityAlgorithms.HmacSha256Signature);
+            //services.AddSingleton<SigningCredentials>(signingCredentials);
 
-            SigningCredentials signingCredentials = new SigningCredentials(signKey,
-                SecurityAlgorithms.HmacSha256Signature);
-            services.AddSingleton<SigningCredentials>(signingCredentials);
+            //string issuer = Configuration.GetValue<string>("SigningCredentials:Issuer");
+            //string audience = Configuration.GetValue<string>("SigningCredentials:Audience");
 
-            string issuer = Configuration.GetValue<string>("SigningCredentials:Issuer");
-            string audience = Configuration.GetValue<string>("SigningCredentials:Audience"); 
+            services.AddSingleton<IOpenAppAuthService>(impl =>
+            {
+                return new InternalOpenAuthService("yltbook", "85959r9wz9r7rni9izo");
+            });
 
             //EntityFramework Core UseMySQL
             //services.AddDbContext<AppDbContext>(options => options.UseMySql(connectionString));
@@ -86,7 +100,46 @@ namespace Celia.io.Core.StaticObjects.OpenAPI
             //             IssuerSigningKey = signKey,
             //         };
             //    });
+            services.AddTransient<AzureStorageProvider>();
+            services.AddTransient<AliyunStorageProvider>();
+            services.AddTransient<LocalStorageProvider>();
 
+            DisconfService disconf = new DisconfService(this.Configuration);
+            disconf.CustomConfigs.Add(AzureStorageProvider.STORAGE_PROVIDER_TYPE_KEY, AzureStorageProvider.STORAGE_PROVIDER_TYPE_VALUE);
+            disconf.CustomConfigs.Add(AliyunStorageProvider.STORAGE_PROVIDER_TYPE_KEY, AliyunStorageProvider.STORAGE_PROVIDER_TYPE_VALUE);
+            disconf.CustomConfigs.Add(LocalStorageProvider.STORAGE_PROVIDER_TYPE_KEY, LocalStorageProvider.STORAGE_PROVIDER_TYPE_VALUE);
+            disconf.CustomConfigs.Add("IsDebugMode", isDebugMode);
+
+            services.AddSingleton(disconf);
+
+            services.AddDbContext<StaticObjectsDbContext>(options => options.UseSqlServer(connectionString));
+
+            services.AddTransient<Abstractions.IStaticObjectsRepository>(
+                new Func<IServiceProvider, Abstractions.IStaticObjectsRepository>(
+                (provider) =>
+                {
+                    return new EfCoreStaticObjectsRepository(
+                        provider.GetService<ILogger<EfCoreStaticObjectsRepository>>(),
+                        provider.GetService<StaticObjectsDbContext>());
+                }));
+            services.AddTransient<IServiceAppService>(new Func<IServiceProvider, IServiceAppService>(
+                (provider) =>
+                {
+                    return new ServiceAppService(provider.GetService<ILogger<ServiceAppService>>(), provider.GetService<Abstractions.IStaticObjectsRepository>(), provider);
+                }));
+            services.AddTransient<IStorageService>(new Func<IServiceProvider, IStorageService>(
+                (provider) =>
+                {
+                    return new StorageService(provider.GetService<ILogger<StorageService>>(), 
+                        provider.GetService<Abstractions.IStaticObjectsRepository>(), provider);
+                }));
+            services.AddTransient<IImageService>(new Func<IServiceProvider, IImageService>(
+                (provider) =>
+                {
+                    return new ImageService(provider.GetService<ILogger<ImageService>>(),
+                        provider.GetService<IServiceAppService>(), provider.GetService<IStorageService>(),
+                        provider.GetService<Abstractions.IStaticObjectsRepository>());
+                }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

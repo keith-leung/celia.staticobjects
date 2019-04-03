@@ -8,6 +8,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Celia.io.Core.MicroServices.Utilities;
 using Celia.io.Core.StaticObjects.Abstractions;
+using Celia.io.Core.StaticObjects.Models;
 using Celia.io.Core.StaticObjects.Services; 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -43,8 +44,8 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
 
         [HttpPost("uploadimg")]
         public async Task<ImageElementResponseResult> UploadImgAsync(
-            [FromHeader] [Required] string appId,
-            [FromHeader] [Required] string appSecret,
+            [FromHeader] [Required] string appid,
+            //[FromHeader] [Required] string appSecret,
             IFormFile formFile, [FromQuery] [Required] string storageId,
             [FromQuery] string objectId = "", [FromQuery] string extension = "",
             [FromQuery] string filePath = "")
@@ -59,14 +60,14 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
                         Code = (int)HttpStatusCode.BadRequest, //400
                     };
                 }
-                if (!_serviceAppService.IsValid(appId, appSecret))
-                {
-                    return new ImageElementResponseResult()
-                    {
-                        Code = (int)HttpStatusCode.Unauthorized, // 401
-                        Message = "AppId, AppSecret is not authorized, or. "
-                    };
-                }
+                //if (!_serviceAppService.IsValid(appId, appSecret))
+                //{
+                //    return new ImageElementResponseResult()
+                //    {
+                //        Code = (int)HttpStatusCode.Unauthorized, // 401
+                //        Message = "AppId, AppSecret is not authorized, or. "
+                //    };
+                //}
                 if (!_storageService.ValidStorage(storageId))
                 {
                     return new ImageElementResponseResult()
@@ -88,7 +89,7 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
                 {
                     _logger.LogInformation("BR.StaticObjects.WebAPI_Core.ImagesController.UploadImg: "
                         + $"storageId={storageId}, fileSize={stream.Length}, extension={extension}, srcFile={formFile.FileName}");
-                    element = await _imageService.UploadImgAsync(appId, stream, storageId, objectId, extension, filePath, formFile.FileName);
+                    element = await _imageService.UploadImgAsync(appid, stream, storageId, objectId, extension, filePath, formFile.FileName);
                 }
                 return new ImageElementResponseResult()
                 {
@@ -109,20 +110,20 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
 
         [HttpGet("findbyobjectid")]
         public async Task<ImageGroupResponseResult> FindByObjectIdAsync(
-            [FromHeader] [Required] string appId,
-            [FromHeader] [Required] string appSecret,
+            [FromHeader] [Required] string appid,
+            //[FromHeader] [Required] string appSecret,
             [FromQuery] [Required] string objectId)
         {
             try
             {
-                if (!_serviceAppService.IsValid(appId, appSecret))
-                {
-                    return new ImageGroupResponseResult()
-                    {
-                        Code = (int)HttpStatusCode.Unauthorized, // 401
-                        Message = "AppId, AppSecret is not authorized, or. "
-                    };
-                }
+                //if (!_serviceAppService.IsValid(appId, appSecret))
+                //{
+                //    return new ImageGroupResponseResult()
+                //    {
+                //        Code = (int)HttpStatusCode.Unauthorized, // 401
+                //        Message = "AppId, AppSecret is not authorized, or. "
+                //    };
+                //}
                 return new ImageGroupResponseResult()
                 {
                     Code = 200,
@@ -142,8 +143,8 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
 
         [HttpGet("geturlbysize")]
         public async Task<UrlResponseResult> GetUrlAsync(
-            [FromHeader] [Required] string appId,
-            [FromHeader] [Required] string appSecret,
+            [FromHeader] [Required] string appid,
+            //[FromHeader] [Required] string appSecret,
             [FromQuery] [Required] string objectId,
             [FromQuery] [Required] int type,
             [FromQuery] string format = "",
@@ -159,14 +160,14 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
                         Code = (int)HttpStatusCode.BadRequest, //400
                     };
                 }
-                if (!_serviceAppService.IsValid(appId, appSecret))
-                {
-                    return new UrlResponseResult()
-                    {
-                        Code = (int)HttpStatusCode.Unauthorized, // 401
-                        Message = "AppId, AppSecret is not authorized, or. "
-                    };
-                }
+                //if (!_serviceAppService.IsValid(appId, appSecret))
+                //{
+                //    return new UrlResponseResult()
+                //    {
+                //        Code = (int)HttpStatusCode.Unauthorized, // 401
+                //        Message = "AppId, AppSecret is not authorized, or. "
+                //    };
+                //}
                 return new UrlResponseResult()
                 {
                     Code = 200,
@@ -187,7 +188,7 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
         [HttpGet("geturlbystyle")]
         public async Task<UrlResponseResult> GetUrlAsync(
             [FromHeader] [Required] string appId,
-            [FromHeader] [Required] string appSecret,
+            //[FromHeader] [Required] string appSecret,
             [FromQuery] [Required] string objectId,
             [FromQuery] [Required] int type, string styleName = "")
         {
@@ -200,14 +201,14 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
                         Code = (int)HttpStatusCode.BadRequest, //400
                     };
                 }
-                if (!_serviceAppService.IsValid(appId, appSecret))
-                {
-                    return new UrlResponseResult()
-                    {
-                        Code = (int)HttpStatusCode.Unauthorized, // 401
-                        Message = "AppId, AppSecret is not authorized, or. "
-                    };
-                }
+                //if (!_serviceAppService.IsValid(appId, appSecret))
+                //{
+                //    return new UrlResponseResult()
+                //    {
+                //        Code = (int)HttpStatusCode.Unauthorized, // 401
+                //        Message = "AppId, AppSecret is not authorized, or. "
+                //    };
+                //}
                 return new UrlResponseResult()
                 {
                     Code = 200,
@@ -227,8 +228,8 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
 
         [HttpGet("geturlcustom")]
         public async Task<UrlResponseResult> GetUrlCustomAsync(
-            [FromHeader] [Required] string appId,
-            [FromHeader] [Required] string appSecret,
+            [FromHeader] [Required] string appid,
+            //[FromHeader] [Required] string appSecret,
             [FromQuery] [Required] string objectId,
             [FromQuery] [Required] int type, string customStyleProcessStr = "")
         {
@@ -241,14 +242,14 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
                         Code = (int)HttpStatusCode.BadRequest, //400
                     };
                 }
-                if (!_serviceAppService.IsValid(appId, appSecret))
-                {
-                    return new UrlResponseResult()
-                    {
-                        Code = (int)HttpStatusCode.Unauthorized, // 401
-                        Message = "AppId, AppSecret is not authorized, or. "
-                    };
-                }
+                //if (!_serviceAppService.IsValid(appId, appSecret))
+                //{
+                //    return new UrlResponseResult()
+                //    {
+                //        Code = (int)HttpStatusCode.Unauthorized, // 401
+                //        Message = "AppId, AppSecret is not authorized, or. "
+                //    };
+                //}
                 return new UrlResponseResult()
                 {
                     Code = 200,
@@ -268,8 +269,8 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
 
         [HttpPost("publish")]
         public async Task<UrlResponseResult> PublishAsync(
-            [FromHeader] [Required] string appId,
-            [FromHeader] [Required] string appSecret,
+            [FromHeader] [Required] string appid,
+            //[FromHeader] [Required] string appSecret,
             [FromBody] MediaElementActionRequest element)
         {
             try
@@ -281,15 +282,15 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
                         Code = (int)HttpStatusCode.BadRequest, //400
                     };
                 }
-                if (!_serviceAppService.IsValid(appId, appSecret))
-                {
-                    return new UrlResponseResult()
-                    {
-                        Code = (int)HttpStatusCode.Unauthorized, // 401
-                        Message = "AppId, AppSecret is not authorized, or. "
-                    };
-                }
-                await _imageService.PublishAsync(appId, element.ObjectId);
+                //if (!_serviceAppService.IsValid(appId, appSecret))
+                //{
+                //    return new UrlResponseResult()
+                //    {
+                //        Code = (int)HttpStatusCode.Unauthorized, // 401
+                //        Message = "AppId, AppSecret is not authorized, or. "
+                //    };
+                //}
+                await _imageService.PublishAsync(appid, element.ObjectId);
                 return new UrlResponseResult()
                 {
                     Code = 200,
@@ -308,30 +309,30 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
         }
 
         [HttpPost("revokepublish")]
-        public async Task<ActionResponseResult> RevokePublishAsync(
-            [FromHeader] [Required] string appId,
-            [FromHeader] [Required] string appSecret,
+        public async Task<ResponseResult<string>> RevokePublishAsync(
+            [FromHeader] [Required] string appid,
+            //[FromHeader] [Required] string appSecret,
             [FromBody] MediaElementActionRequest element)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return new ActionResponseResult()
+                    return new ResponseResult<string>()
                     {
                         Code = (int)HttpStatusCode.BadRequest, //400
                     };
                 }
-                if (!_serviceAppService.IsValid(appId, appSecret))
-                {
-                    return new ActionResponseResult()
-                    {
-                        Code = (int)HttpStatusCode.Unauthorized, // 401
-                        Message = "AppId, AppSecret is not authorized, or. "
-                    };
-                }
-                await _imageService.RevokePublishAsync(appId, element.ObjectId);
-                return new ActionResponseResult()
+                //if (!_serviceAppService.IsValid(appId, appSecret))
+                //{
+                //    return new ResponseResult<string>()
+                //    {
+                //        Code = (int)HttpStatusCode.Unauthorized, // 401
+                //        Message = "AppId, AppSecret is not authorized, or. "
+                //    };
+                //}
+                await _imageService.RevokePublishAsync(appid, element.ObjectId);
+                return new ResponseResult<string>()
                 {
                     Code = 200,
                     Data = await _imageService.GetUrlAsync(element.ObjectId, MediaElementUrlType.PublishOutputUrl, string.Empty)
@@ -340,7 +341,7 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(new EventId(), ex, "BR.StaticObjects.WebAPI_Core.ImagesController.RevokePublishAsync");
-                return new ActionResponseResult()
+                return new ResponseResult<string>()
                 {
                     Code = 500,
                     Message = ex.Message,
@@ -349,30 +350,30 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
         }
 
         [HttpPost("AddImgRelations")]
-        public async Task<ActionResponseResult> AddImgRelations(
-            [FromHeader] [Required] string appId,
-            [FromHeader] [Required] string appSecret,
+        public async Task<ResponseResult<string>> AddImgRelations(
+            [FromHeader] [Required] string appid,
+            //[FromHeader] [Required] string appSecret,
             [FromBody] AddImgRelationsEntity RelationsEntity)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return new ActionResponseResult()
+                    return new ResponseResult<string>()
                     {
                         Code = (int)HttpStatusCode.BadRequest, //400
                     };
                 }
-                if (!_serviceAppService.IsValid(appId, appSecret))
-                {
-                    return new ActionResponseResult()
-                    {
-                        Code = (int)HttpStatusCode.Unauthorized, // 401
-                        Message = "AppId, AppSecret is not authorized, or. "
-                    };
-                }
+                //if (!_serviceAppService.IsValid(appId, appSecret))
+                //{
+                //    return new ResponseResult<string>()
+                //    {
+                //        Code = (int)HttpStatusCode.Unauthorized, // 401
+                //        Message = "AppId, AppSecret is not authorized, or. "
+                //    };
+                //}
                 var Result = await _imageService.AddImgRelationsAsync(RelationsEntity.ImgId, RelationsEntity.ObjectId);
-                return new ActionResponseResult()
+                return new ResponseResult<string>()
                 {
                     Code = 200,
                     Data = Result
@@ -381,7 +382,7 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(new EventId(), ex, "BR.StaticObjects.WebAPI_Core.ImagesController.RevokePublishAsync");
-                return new ActionResponseResult()
+                return new ResponseResult<string>()
                 {
                     Code = 500,
                     Message = ex.Message,
@@ -392,7 +393,7 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
         [HttpGet("geturlbybatch")]
         public async Task<UrlBatchEntity> GetUrlAsyncBatch(
         [FromHeader] [Required] string appId,
-        [FromHeader] [Required] string appSecret,
+        //[FromHeader] [Required] string appSecret,
         [FromQuery] [Required] string objectId,
         [FromQuery] [Required] int type,
         [FromQuery] string format = "",
@@ -408,14 +409,14 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
                         Code = (int)HttpStatusCode.BadRequest, //400
                     };
                 }
-                if (!_serviceAppService.IsValid(appId, appSecret))
-                {
-                    return new UrlBatchEntity()
-                    {
-                        Code = (int)HttpStatusCode.Unauthorized, // 401
-                        Message = "AppId, AppSecret is not authorized, or. "
-                    };
-                }
+                //if (!_serviceAppService.IsValid(appId, appSecret))
+                //{
+                //    return new UrlBatchEntity()
+                //    {
+                //        Code = (int)HttpStatusCode.Unauthorized, // 401
+                //        Message = "AppId, AppSecret is not authorized, or. "
+                //    };
+                //}
                 string[] objectIdArray = objectId.Split('|');
                 Hashtable hashtable = new Hashtable();
                 foreach (var item in objectIdArray)

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace BR.MsgHub.OpenApi.Models
+namespace Celia.io.Core.StaticObjects.Models
 {
     public class OpenApiRequestHandler : AuthorizationHandler<OpenApiRequirement>
     {

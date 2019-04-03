@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Celia.io.Core.MicroServices.Utilities" Version="0.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.4" />
@@ -28,6 +29,7 @@
     <ProjectReference Include="..\Celia.io.Core.Abstractions\Celia.io.Core.StaticObjects.Abstractions.csproj" />
     <ProjectReference Include="..\Celia.io.Core.StaticObjects.DataAccess\Celia.io.Core.StaticObjects.DataAccess.csproj" />
     <ProjectReference Include="..\Celia.io.Core.StaticObjects.Services\Celia.io.Core.StaticObjects.Services.csproj" />
+    <ProjectReference Include="..\Celia.io.Core.StaticObjects.StorageProviders\Celia.io.Core.StaticObjects.StorageProviders.csproj" />
   </ItemGroup>
 
   <ItemGroup>

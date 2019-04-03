@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Celia.io.Core.StaticObjects.Services
+namespace Celia.io.Core.StaticObjects.StorageProviders
 {
     public class Class1
     {

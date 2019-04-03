@@ -43,8 +43,8 @@ namespace Celia.io.Core.StaticObjects.OpenAPI
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", true, true);
             var configObject = config.Build();
-            var fileName = configObject.GetValue<string>("SigningCredentials:FileName");
-            var password = configObject.GetValue<string>("SigningCredentials:Password");
+            //var fileName = configObject.GetValue<string>("SigningCredentials:FileName");
+            //var password = configObject.GetValue<string>("SigningCredentials:Password");
             var httpsPort = 40021;
             var httpPort = 40020;
 
@@ -84,7 +84,7 @@ namespace Celia.io.Core.StaticObjects.OpenAPI
                 .UseStartup<Startup>()
                 .UseIISIntegration()
                 .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseUrls($"http://*:{httpPort}", $"https://*:{httpsPort}")
+                .UseUrls($"http://*:{httpPort}")//, $"https://*:{httpsPort}")
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();

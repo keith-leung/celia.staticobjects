@@ -5,12 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aliyun.OSS.SDK.NetCore" Version="2.9.1" />
     <PackageReference Include="Celia.io.Core.MicroServices.Utilities" Version="0.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
+    <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Celia.io.Core.Abstractions\Celia.io.Core.StaticObjects.Abstractions.csproj" />
+    <ProjectReference Include="..\Celia.io.Core.StaticObjects.Services\Celia.io.Core.StaticObjects.Services.csproj" />
   </ItemGroup>
 
 </Project>

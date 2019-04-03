@@ -4,15 +4,19 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Celia.io.Core.StaticObjects.DataAccess
 {
     public class EfCoreStaticObjectsRepository : IStaticObjectsRepository
     {
         private StaticObjectsDbContext _dbContext;
+        private ILogger _logger;
 
-        public EfCoreStaticObjectsRepository(StaticObjectsDbContext dbContext)
+        public EfCoreStaticObjectsRepository(ILogger<EfCoreStaticObjectsRepository> logger,
+            StaticObjectsDbContext dbContext)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
@@ -26,21 +30,44 @@ namespace Celia.io.Core.StaticObjects.DataAccess
             return this._dbContext.Storages.Find(storageId);
         }
 
-        public async Task<ServiceAppStorageRelation> FindStorageRelationByIdAsync(string appId, string storageId)
+        public async Task<ServiceAppStorageRelation> FindStorageRelationByIdAsync(
+            string appId, string storageId)
         {
+            _logger.LogWarning(
+                $"EfCoreStaticObjectsRepository.FindStorageRelationByIdAsync appId={appId}, storageId={storageId}");
+            //var temp = this._dbContext.ServiceAppStorageRelations.FirstOrDefault();
+            //_logger.LogWarning($"FirstOrDefault {temp.Id}");
             var result = this._dbContext.ServiceAppStorageRelations.FirstOrDefault(
                 m => m.AppId.Equals(appId, StringComparison.InvariantCultureIgnoreCase)
                 && m.StorageId.Equals(storageId, StringComparison.InvariantCultureIgnoreCase));
-
+            _logger.LogWarning(
+                $"EfCoreStaticObjectsRepository.FindStorageRelationByIdAsync appId={appId}, storageId={storageId} result={result?.Id}");
             return result;
         }
 
         public async Task<ImageElementTranItem[]> GetImageTranItemsByObjectIdAsync(string objectId)
         {
             var result = this._dbContext.ImageElementTranItems.Where(
-                m => m.ObjectId.Equals(objectId, StringComparison.InvariantCultureIgnoreCase));
+                m => m.ImageId.Equals(objectId, StringComparison.InvariantCultureIgnoreCase));
 
             return result.ToArray();
+        }
+
+        public void DeleteImageTranItems(string ImageId)
+        {
+            try
+            {
+                var result = this._dbContext.ImageElementTranItems.Where(
+                    m => m.ImageId.Equals(ImageId, StringComparison.InvariantCultureIgnoreCase)).ToList();
+
+                this._dbContext.ImageElementTranItems.RemoveRange(result);
+                var i = _dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                int a = 1;
+            }
+
         }
 
         public Task PublishAsync(ImageElement element)
@@ -77,6 +104,45 @@ namespace Celia.io.Core.StaticObjects.DataAccess
 
         public Task UpsertElementAsync(ImageElement element)
         {
+            //try
+            //{
+            //    var data = this._dbContext.ImageElements.FindAsync(element.ObjectId);
+            //    if (!data.IsFaulted && data.Result != null)
+            //    {
+            //        data.Result.UTIME = DateTime.Now;
+            //        data.Result.StoreWithSrcFileName = element.StoreWithSrcFileName;
+            //        data.Result.StorageId = element.StorageId;
+            //        data.Result.SrcFileName = element.SrcFileName;
+            //        data.Result.IsPublished = element.IsPublished;
+            //        data.Result.FilePath = element.FilePath;
+            //        data.Result.Extension = element.Extension;
+
+            //        _dbContext.Update(data.Result);
+            //        _dbContext.SaveChanges();
+            //    }
+            //    else if ((!data.IsFaulted))
+            //    {
+            //        ImageElement entity = new ImageElement()
+            //        {
+            //            ObjectId = element.ObjectId,
+            //            CTIME = DateTime.Now,
+            //            Extension = element.Extension,
+            //            FilePath = element.FilePath,
+            //            IsPublished = element.IsPublished,
+            //            SrcFileName = element.SrcFileName,
+            //            StorageId = element.StorageId,
+            //            StoreWithSrcFileName = element.StoreWithSrcFileName,
+            //        };
+
+            //        _dbContext.ImageElements.Add(entity);
+            //        _dbContext.SaveChanges();
+
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    int a = 1;
+            //}
             return this._dbContext.ImageElements.FindAsync(element.ObjectId)
                 .ContinueWith(m2 =>
                 {
@@ -106,8 +172,76 @@ namespace Celia.io.Core.StaticObjects.DataAccess
                             StorageId = element.StorageId,
                             StoreWithSrcFileName = element.StoreWithSrcFileName,
                         };
-
                         _dbContext.ImageElements.Add(entity);
+                        _dbContext.SaveChanges();
+                    }
+                });
+        }
+        public Task UpsertElementItemAsync(ImageElementTranItem elementItem)
+        {
+            //try
+            //{
+            //    var j = this._dbContext.ImageElementTranItems.FindAsync(elementItem.ObjectId);
+
+            //    if (!j.IsFaulted && j.Result != null)
+            //    {
+            //        j.Result.UTIME = DateTime.Now;
+            //        j.Result.Extension = elementItem.Extension;
+            //        j.Result.FilePath = j.Result.FilePath;
+            //        j.Result.ImageId = elementItem.ImageId;
+            //        j.Result.ObjectId = elementItem.ObjectId;
+            //        j.Result.TranItemType = elementItem.TranItemType;
+
+            //        _dbContext.Update(j.Result);
+            //        _dbContext.SaveChanges();
+            //    }
+            //    else if (!j.IsFaulted)
+            //    {
+            //        ImageElementTranItem entity = new ImageElementTranItem()
+            //        {
+            //            CTIME = DateTime.Now,
+            //            Extension = elementItem.Extension,
+            //            FilePath = elementItem.FilePath,
+            //            ImageId = elementItem.ImageId,
+            //            ObjectId = elementItem.ObjectId,
+            //            TranItemType = elementItem.TranItemType,
+            //        };
+            //        _dbContext.ImageElementTranItems.Add(entity);
+            //        _dbContext.SaveChanges();
+            //    }
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    int a = 1;
+            //}
+            return this._dbContext.ImageElementTranItems.FindAsync(elementItem.ObjectId).
+                ContinueWith(t =>
+                {
+                    if (!t.IsFaulted && t.Result != null)
+                    {
+                        t.Result.UTIME = DateTime.Now;
+                        t.Result.Extension = elementItem.Extension;
+                        t.Result.FilePath = elementItem.FilePath;
+                        t.Result.ImageId = elementItem.ImageId;
+                        t.Result.ObjectId = elementItem.ObjectId;
+                        t.Result.TranItemType = elementItem.TranItemType;
+
+                        _dbContext.Update(t.Result);
+                        _dbContext.SaveChanges();
+                    }
+                    else if (!t.IsFaulted)
+                    {
+                        ImageElementTranItem entity = new ImageElementTranItem()
+                        {
+                            CTIME = DateTime.Now,
+                            Extension = elementItem.Extension,
+                            FilePath = elementItem.FilePath,
+                            ImageId = elementItem.ImageId,
+                            ObjectId = elementItem.ObjectId,
+                            TranItemType = elementItem.TranItemType,
+                        };
+                        _dbContext.ImageElementTranItems.Add(entity);
                         _dbContext.SaveChanges();
                     }
                 });
