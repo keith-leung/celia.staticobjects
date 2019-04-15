@@ -1,4 +1,4 @@
-﻿using BR.MicroServices.Utilities;
+﻿using Celia.io.Core.MicroServices.Utilities;
 using Celia.io.Core.StaticObjects.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using System;

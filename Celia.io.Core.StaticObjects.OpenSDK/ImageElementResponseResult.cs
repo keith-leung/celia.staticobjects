@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Celia.io.Core.StaticObjects.Models
+namespace Celia.io.Core.StaticObjects.OpenSDK
 {
     public class ImageElementResponseResult : ResponseResult<ImageElement>
     { 
