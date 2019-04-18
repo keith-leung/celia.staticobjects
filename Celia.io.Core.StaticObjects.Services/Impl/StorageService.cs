@@ -216,6 +216,8 @@ namespace Celia.io.Core.StaticObjects.Services.Impl
                     storage.StorageId, storage.StorageAccessKey, StorageMode.Internal,
                     storage.DownloadHost, element.FilePath, element.GetFileName()))
             {
+                if (stream == null)
+                    return;
                 await storageProvider.UploadFileAsync(
                     stream, storage.PublishStorageId, storage.PublishStorageAccessKey,
                     StorageMode.External, storage.PublishHost, element.FilePath, element.GetFileName());
@@ -228,7 +230,7 @@ namespace Celia.io.Core.StaticObjects.Services.Impl
                 _serviceProvider, storage.StorageType);
 
             await storageProvider.RemoveFileAsync(storage.PublishStorageId,
-                storage.PublishStorageAccessKey, StorageMode.Internal,
+                storage.PublishStorageAccessKey, StorageMode.External,
                 storage.PublishHost, element.FilePath, element.GetFileName());
         }
 

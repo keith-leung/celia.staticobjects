@@ -180,8 +180,8 @@ namespace Celia.io.Core.StaticObjects.StorageProviders
             }
             else
             {
-                CloudBlobContainer container = GetContainer(storageInfo.StorageId,storageInfo.StorageAccessKey, StorageMode.Internal, filePath);
-                filePath = (!string.IsNullOrEmpty(filePath) ? filePath + "/" : "")+ fileName;// + customStyleProcessStr; 
+                CloudBlobContainer container = GetContainer(storageInfo.StorageId, storageInfo.StorageAccessKey, StorageMode.Internal, filePath);
+                filePath = (!string.IsNullOrEmpty(filePath) ? filePath + "/" : "") + fileName;// + customStyleProcessStr; 
                 // write a blob to the container
                 CloudBlockBlob blob = container.GetBlockBlobReference(filePath);
                 var temp = blob.ExistsAsync();
@@ -200,7 +200,7 @@ namespace Celia.io.Core.StaticObjects.StorageProviders
                 sasConstraints.SharedAccessExpiryTime = DateTime.UtcNow.AddMinutes(60);
                 sasConstraints.Permissions = SharedAccessBlobPermissions.Read;
                 SharedAccessBlobHeaders sasHeaders = new SharedAccessBlobHeaders();
-                sasHeaders.ContentType = this.GetContentType(fileName,customStyleProcessStr, sasHeaders.ContentType);
+                sasHeaders.ContentType = this.GetContentType(fileName, customStyleProcessStr, sasHeaders.ContentType);
 
                 var sasBlobToken = blob.GetSharedAccessSignature(sasConstraints, sasHeaders);
 
@@ -225,86 +225,80 @@ namespace Celia.io.Core.StaticObjects.StorageProviders
             return defFormat;
         }
 
-        public Task RemoveFileAsync(string storageId, string storageAccessKey,StorageMode mode, string host, string filePath, string fileName)
+        public async Task RemoveFileAsync(string storageId, string storageAccessKey, StorageMode mode, string host, string filePath, string fileName)
         {
-            return Task.Run(() =>
-            {
-                CloudBlobContainer container = GetContainer(storageId, storageAccessKey, mode, filePath);
+            CloudBlobContainer container = GetContainer(storageId, storageAccessKey, mode, filePath);
 
-                //if (string.IsNullOrEmpty(filePath))
-                //{
-                //    filePath = DEFAULT_CONTAINER;
-                //}
+            //if (string.IsNullOrEmpty(filePath))
+            //{
+            //    filePath = DEFAULT_CONTAINER;
+            //}
 
-                // write a blob to the container
-                CloudBlockBlob blob = container.GetBlockBlobReference(
-                    Path.Combine(filePath, fileName));
+            // write a blob to the container
+            CloudBlockBlob blob = container.GetBlockBlobReference(
+                Path.Combine(filePath, fileName));
 
-                var task = blob.DeleteIfExistsAsync();
-                task.Wait();
-            });
+            var task = blob.DeleteIfExistsAsync();
+            task.Wait();
         }
 
-        public Task UploadFileAsync(Stream stream, string storageId, string storageAccessKey,StorageMode mode, string downloadHost, string filePath, string fileName)
+        public async Task UploadFileAsync(Stream stream, string storageId, string storageAccessKey, StorageMode mode, string downloadHost, string filePath, string fileName)
         {
-            return Task.Run(() =>
+            if (stream.Length < 1)
+                return;
+
+            CloudBlobContainer container = GetContainer(storageId, storageAccessKey, mode, filePath);
+
+            //if (string.IsNullOrEmpty(filePath))
+            //{
+            //    filePath = DEFAULT_CONTAINER;
+            //}
+
+            // write a blob to the container
+            CloudBlockBlob blob = container.GetBlockBlobReference(
+                Path.Combine(filePath, fileName));
+            //var temp = blob.ExistsAsync();
+            //temp.Wait();
+            //if (temp.Result == false)
+            //    return;
+
+            var task = blob.OpenWriteAsync();
+            task.Wait();
+
+            var writeStream = task.Result;
+
+            byte[] buffer = null;
+
+            if (stream.Length <= BUFFER_SIZE)
             {
-                if (stream.Length < 1)
-                    return;
+                buffer = new byte[(int)stream.Length];
+                stream.Read(buffer, 0, (int)stream.Length);
 
-                CloudBlobContainer container = GetContainer(storageId, storageAccessKey, mode, filePath);
+                writeStream.Write(buffer, 0, (int)stream.Length);
 
-                //if (string.IsNullOrEmpty(filePath))
-                //{
-                //    filePath = DEFAULT_CONTAINER;
-                //}
+                var temp2 = writeStream.CommitAsync();
+                temp2.Wait();
+            }
+            else
+            {
+                long current = 0;
 
-                // write a blob to the container
-                CloudBlockBlob blob = container.GetBlockBlobReference(
-                    Path.Combine(filePath, fileName));
-                //var temp = blob.ExistsAsync();
-                //temp.Wait();
-                //if (temp.Result == false)
-                //    return;
-
-                var task = blob.OpenWriteAsync();
-                task.Wait();
-
-                var writeStream = task.Result;
-
-                byte[] buffer = null;
-
-                if (stream.Length <= BUFFER_SIZE)
+                while (current <= stream.Length)
                 {
-                    buffer = new byte[(int)stream.Length];
-                    stream.Read(buffer, 0, (int)stream.Length);
-
-                    writeStream.Write(buffer, 0, (int)stream.Length);
-
-                    var temp2 = writeStream.CommitAsync();
-                    temp2.Wait();
+                    long length = Math.Min((long)BUFFER_SIZE, stream.Length - current);
+                    buffer = new byte[(int)length];
+                    System.Diagnostics.Trace.WriteLine($"LargeStream position: {stream.Position}");
+                    stream.Read(buffer, 0, (int)length);
+                    current += BUFFER_SIZE;
+                    writeStream.Write(buffer, 0, (int)length);
                 }
-                else
-                {
-                    long current = 0;
 
-                    while (current <= stream.Length)
-                    {
-                        long length = Math.Min((long)BUFFER_SIZE, stream.Length - current);
-                        buffer = new byte[(int)length];
-                        System.Diagnostics.Trace.WriteLine($"LargeStream position: {stream.Position}");
-                        stream.Read(buffer, 0, (int)length);
-                        current += BUFFER_SIZE;
-                        writeStream.Write(buffer, 0, (int)length);
-                    }
-
-                    var temp2 = writeStream.CommitAsync();
-                    temp2.Wait();
-                }
-            });
+                var temp2 = writeStream.CommitAsync();
+                temp2.Wait();
+            }
         }
 
-        private static CloudBlobContainer GetContainer(string storageId, string storageAccessKey,StorageMode mode, string filePath)
+        private static CloudBlobContainer GetContainer(string storageId, string storageAccessKey, StorageMode mode, string filePath)
         {
             string endPoint = ExtractEndpoint(storageAccessKey);
             string accountKey = ExtractAccountKey(storageAccessKey);
