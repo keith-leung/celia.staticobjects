@@ -7,18 +7,18 @@ namespace ConsoleAppTester1
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main0(string[] args)
         {
 
 
             Console.WriteLine("Hello World!");
         }
 
-        static void Main0(string[] args)
+        static void Main(string[] args)
         {
             Celia.io.Core.StaticObjects.OpenSDK.ImageManager imgManager
                 = new Celia.io.Core.StaticObjects.OpenSDK.ImageManager(
-                    "https://imageylt.chinacloudsites.cn/",
+                    "http://localhost:55151/", //"https://imageylt.chinacloudsites.cn/",
                 "yltbook", "85959r9wz9r7rni9izo");
 
             var res0 = imgManager.Publish("5cb43f28aa012613acabbc7d");
