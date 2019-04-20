@@ -179,6 +179,18 @@ namespace Celia.io.Core.StaticObjects.Services.Impl
                 StoreWithSrcFileName = rel.StoreWithSrcFileName.GetValueOrDefault(),
             };
 
+            var entity = _repository.GetImageElementById(objectId);
+            if (entity != null)
+            {
+                entity.UTIME = DateTime.Now;
+                entity.StorageId = storageId;
+                entity.Extension = extension;
+                entity.FilePath = filePath;
+                entity.SrcFileName = srcFileName;
+
+                element = entity;
+            }
+
             Storage storage = _storageService.FindStorageById(element.StorageId);
 
             await _storageService.UploadFileAsync(storage, element, stream);

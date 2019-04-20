@@ -14,5 +14,6 @@ namespace Celia.io.Core.StaticObjects.Abstractions
         Task<ServiceAppStorageRelation> FindStorageRelationByIdAsync(string appId, string storageId);
         Task PublishAsync(ImageElement element);
         Task RevokePublishAsync(ImageElement element);
+        ImageElement GetImageElementById(string objectId);
     }
 }

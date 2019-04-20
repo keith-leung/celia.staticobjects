@@ -87,7 +87,7 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
                 ImageElement element = null;
                 using (var stream = formFile.OpenReadStream())
                 {
-                    _logger.LogInformation("BR.StaticObjects.WebAPI_Core.ImagesController.UploadImg: "
+                    _logger.LogInformation("Celia.io.Core.StaticObjects.WebAPI_Core.ImagesController.UploadImg: "
                         + $"storageId={storageId}, fileSize={stream.Length}, extension={extension}, srcFile={formFile.FileName}");
                     element = await _imageService.UploadImgAsync(appid, stream, storageId, objectId, extension, filePath, formFile.FileName);
                 }
@@ -99,7 +99,7 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(new EventId(), ex, "BR.StaticObjects.WebAPI_Core.ImagesController.UploadImg");
+                _logger.LogError(new EventId(), ex, "Celia.io.Core.StaticObjects.WebAPI_Core.ImagesController.UploadImg");
                 return new ImageElementResponseResult()
                 {
                     Code = 500,
@@ -132,7 +132,7 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(new EventId(), ex, "BR.StaticObjects.WebAPI_Core.ImagesController.FindByObjectIdAsync");
+                _logger.LogError(new EventId(), ex, "Celia.io.Core.StaticObjects.WebAPI_Core.ImagesController.FindByObjectIdAsync");
                 return new ImageGroupResponseResult()
                 {
                     Code = 500,
@@ -176,7 +176,7 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(new EventId(), ex, "BR.StaticObjects.WebAPI_Core.ImagesController.GetUrlAsync");
+                _logger.LogError(new EventId(), ex, "Celia.io.Core.StaticObjects.WebAPI_Core.ImagesController.GetUrlAsync");
                 return new UrlResponseResult()
                 {
                     Code = 500,
@@ -217,7 +217,7 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(new EventId(), ex, "BR.StaticObjects.WebAPI_Core.ImagesController.GetUrlAsync");
+                _logger.LogError(new EventId(), ex, "Celia.io.Core.StaticObjects.WebAPI_Core.ImagesController.GetUrlAsync");
                 return new UrlResponseResult()
                 {
                     Code = 500,
@@ -258,7 +258,7 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(new EventId(), ex, "BR.StaticObjects.WebAPI_Core.ImagesController.GetUrlCustomAsync");
+                _logger.LogError(new EventId(), ex, "Celia.io.Core.StaticObjects.WebAPI_Core.ImagesController.GetUrlCustomAsync");
                 return new UrlResponseResult()
                 {
                     Code = 500,
@@ -299,7 +299,7 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(new EventId(), ex, "BR.StaticObjects.WebAPI_Core.ImagesController.PublishAsync");
+                _logger.LogError(new EventId(), ex, "Celia.io.Core.StaticObjects.WebAPI_Core.ImagesController.PublishAsync");
                 return new UrlResponseResult()
                 {
                     Code = 500,
@@ -340,7 +340,7 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(new EventId(), ex, "BR.StaticObjects.WebAPI_Core.ImagesController.RevokePublishAsync");
+                _logger.LogError(new EventId(), ex, "Celia.io.Core.StaticObjects.WebAPI_Core.ImagesController.RevokePublishAsync");
                 return new ResponseResult<string>()
                 {
                     Code = 500,
@@ -381,7 +381,7 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(new EventId(), ex, "BR.StaticObjects.WebAPI_Core.ImagesController.RevokePublishAsync");
+                _logger.LogError(new EventId(), ex, "Celia.io.Core.StaticObjects.WebAPI_Core.ImagesController.RevokePublishAsync");
                 return new ResponseResult<string>()
                 {
                     Code = 500,
@@ -435,7 +435,7 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(new EventId(), ex, "BR.StaticObjects.WebAPI_Core.ImagesController.GetUrlAsync");
+                _logger.LogError(new EventId(), ex, "Celia.io.Core.StaticObjects.WebAPI_Core.ImagesController.GetUrlAsync");
                 return new UrlBatchEntity()
                 {
                     Code = 500,

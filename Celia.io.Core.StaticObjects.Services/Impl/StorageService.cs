@@ -207,7 +207,7 @@ namespace Celia.io.Core.StaticObjects.Services.Impl
             } 
         }
 
-        public async Task PublishAsync(Storage storage, ImageElement element)
+        public async Task PublishAsync(Storage storage, IMediaElement element)
         {
             IStorageProvider storageProvider = StorageProviderFactory.GetStorageProvider(
                 _serviceProvider, storage.StorageType);
@@ -242,6 +242,11 @@ namespace Celia.io.Core.StaticObjects.Services.Impl
             await storageProvider.UploadFileAsync(stream, storage.StorageId,
                 storage.StorageAccessKey, StorageMode.Internal, storage.DownloadHost,
                 element.FilePath, element.GetFileName());
+
+            if (element.IsPublished)
+            {
+                await this.PublishAsync(storage, element);
+            }
         }
     }
 }

@@ -13,6 +13,7 @@ This is a nuget package project for entities only.</Description>
     <RepositoryUrl>https://github.com/keith-leung/celia.staticobjects</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <ApplicationIcon>bzg.64px.ico</ApplicationIcon>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>

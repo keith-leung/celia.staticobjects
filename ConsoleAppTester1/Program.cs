@@ -18,20 +18,25 @@ namespace ConsoleAppTester1
         {
             Celia.io.Core.StaticObjects.OpenSDK.ImageManager imgManager
                 = new Celia.io.Core.StaticObjects.OpenSDK.ImageManager(
-                    "http://localhost:55151/", //"https://imageylt.chinacloudsites.cn/",
+                    "http://localhost:54356/", //"https://imageylt.chinacloudsites.cn/",
                 "yltbook", "85959r9wz9r7rni9izo");
 
-            var res0 = imgManager.Publish("5cb43f28aa012613acabbc7d");
-            res0.Wait();
+//            var res0 = imgManager.Publish("5ca489dbab57e0625c8bc133");
+//            res0.Wait();
+//
+//            Console.WriteLine(JObject.FromObject(res0.Result).ToString());
 
-            Console.WriteLine(JObject.FromObject(res0.Result).ToString());
-
-            var res2 = imgManager.GetUrlAsync("5cb43f28aa012613acabbc7d",
-                Celia.io.Core.StaticObjects.OpenSDK.MediaElementUrlType.DownloadUrl, "webp", 360);
+            var res2 = imgManager.GetUrlAsync("5ca4878a20467252689f6c96",
+                Celia.io.Core.StaticObjects.OpenSDK.MediaElementUrlType.PublishOutputUrl, "webp", 360);
             res2.Wait();
             Console.WriteLine(JObject.FromObject(res2.Result).ToString());
 
-            var res3 = imgManager.RevokePublish("5cb43f28aa012613acabbc7d");
+            res2 = imgManager.GetUrlAsync("5ca4878a20467252689f6c96",
+                Celia.io.Core.StaticObjects.OpenSDK.MediaElementUrlType.OutputUrl, "webp", 360);
+            res2.Wait();
+            Console.WriteLine(JObject.FromObject(res2.Result).ToString());
+            
+            var res3 = imgManager.RevokePublish("5ca4878a20467252689f6c96");
             res3.Wait();
 
 

@@ -27,7 +27,7 @@ namespace Celia.io.Core.StaticObjects.Services
 
         Storage FindStorageById(string storageId);
 
-        Task PublishAsync(Storage storage, ImageElement element);
+        Task PublishAsync(Storage storage, IMediaElement element);
 
         Task RevokePublishAsync(Storage storage, IMediaElement element);
     }

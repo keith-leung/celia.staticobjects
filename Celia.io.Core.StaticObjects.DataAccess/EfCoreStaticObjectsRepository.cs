@@ -246,5 +246,10 @@ namespace Celia.io.Core.StaticObjects.DataAccess
                     }
                 });
         }
+
+        public ImageElement GetImageElementById(string objectId)
+        {
+            return _dbContext.ImageElements.Find(objectId);
+        }
     }
 }
