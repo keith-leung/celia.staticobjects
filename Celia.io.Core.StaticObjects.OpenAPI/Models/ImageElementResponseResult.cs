@@ -5,9 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Celia.io.Core.StaticObjects.Models
+namespace Celia.io.Core.StaticObjects.Abstractions
 {
     public class ImageElementResponseResult : ResponseResult<ImageElement>
     { 
+        public string OutputUrl { get; set; }
+
+        public string PublishOutputUrl { get; set; }
     }
 }

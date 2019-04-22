@@ -1,5 +1,6 @@
 ﻿using Celia.io.Core.MicroServices.Utilities;
 using Celia.io.Core.MicroServices.Utilities.Webs.Clients;
+using Celia.io.Core.StaticObjects.Abstractions;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;

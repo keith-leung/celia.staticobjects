@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Celia.io.Core.MicroServices.Utilities;
 using Celia.io.Core.StaticObjects.Abstractions;
 using Celia.io.Core.StaticObjects.Models;
-using Celia.io.Core.StaticObjects.Services; 
+using Celia.io.Core.StaticObjects.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -84,18 +84,44 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
                 {
                     extension = Path.GetExtension(formFile.FileName).Trim('.');
                 }
+
                 ImageElement element = null;
+
                 using (var stream = formFile.OpenReadStream())
                 {
                     _logger.LogInformation("Celia.io.Core.StaticObjects.WebAPI_Core.ImagesController.UploadImg: "
                         + $"storageId={storageId}, fileSize={stream.Length}, extension={extension}, srcFile={formFile.FileName}");
                     element = await _imageService.UploadImgAsync(appid, stream, storageId, objectId, extension, filePath, formFile.FileName);
                 }
-                return new ImageElementResponseResult()
+
+                string outputUrl = string.Empty;
+                string publishOutputUrl = string.Empty;
+
+                if (element != null)
                 {
-                    Code = 200,
-                    Data = element,
-                };
+                    outputUrl = await _imageService.GetUrlAsync(
+                       element.ObjectId,
+                       MediaElementUrlType.OutputUrl, string.Empty);
+                    publishOutputUrl = await _imageService.GetUrlAsync(
+                        element.ObjectId, MediaElementUrlType.PublishOutputUrl,
+                        string.Empty);
+
+                    return new ImageElementResponseResult()
+                    {
+                        Code = 200,
+                        Data = element,
+                        OutputUrl = outputUrl,
+                        PublishOutputUrl = publishOutputUrl,
+                    };
+                }
+                else
+                {
+                    return new ImageElementResponseResult()
+                    {
+                        Code = (int)HttpStatusCode.ExpectationFailed,//417
+                        Message = "Create Image Element Error"
+                    };
+                }
             }
             catch (Exception ex)
             {
