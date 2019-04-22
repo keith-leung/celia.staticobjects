@@ -8,10 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Celia.io.Core.MicroServices.Utilities" Version="0.2.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Celia.io.Core.Abstractions\Celia.io.Core.StaticObjects.Abstractions.csproj" />
+    <PackageReference Include="Celia.io.Core.StaticObjects.Abstractions" Version="0.2.1" />
   </ItemGroup>
 
 </Project>

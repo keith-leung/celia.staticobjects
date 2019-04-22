@@ -93,7 +93,7 @@ namespace Celia.io.Core.StaticObjects.StorageProviders
             string hw = string.Empty;
             if (maxWidthHeight >= 1 && maxWidthHeight <= 4096)
             {
-                hw = $"{maxWidthHeight}h_{maxWidthHeight}w";
+                hw = $"{maxWidthHeight}h_{maxWidthHeight}w_1l";
                 //basic = 1080h_1080w_60q.webp
             }
             string q = string.Empty;
