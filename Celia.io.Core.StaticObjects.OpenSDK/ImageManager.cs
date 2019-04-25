@@ -1,6 +1,7 @@
 ﻿using Celia.io.Core.MicroServices.Utilities;
 using Celia.io.Core.MicroServices.Utilities.Webs.Clients;
 using Celia.io.Core.StaticObjects.Abstractions;
+using Celia.io.Core.StaticObjects.Abstractions.DTOs;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
@@ -198,6 +199,34 @@ namespace Celia.io.Core.StaticObjects.OpenSDK
 
             var obj = JObject.Parse(res).ToObject(typeof(UrlResponseResult));
             return obj as UrlResponseResult;
+        }
+
+        public async Task<UrlsResponseResult> GetUrlsAsync(string[] objectIds, MediaElementUrlType type,
+            string format = "", int maxWidthHeight = 10000, int percentage = 100)
+        {
+            long dt = DateTimeUtils.GetCurrentMillisecondsTimestamp();
+            string appsecret = this._appSecret;
+            string path = "/api/images/geturlsbysize";
+
+            string sign = HashUtils.OpenApiSign(this._appId,
+                this._appSecret, dt, path);
+            //{appsecret}!@{appid}#{timestamp}&{content} 
+
+            var res = await _client.Post(
+                $"{_hostAndPort.ToString().Trim(new char[] { })}/api/images/geturlsbysize")
+                .Header("appId", this._appId).Header("ts", dt).Header("sign", sign)
+                .JsonData<GetUrlsBySizeRequest>(new GetUrlsBySizeRequest()
+                {
+                    ObjectIds = objectIds,
+                    Type = (int)type,
+                    Format = format,
+                    MaxWidthHeight = maxWidthHeight,
+                    Percentage = percentage
+                })
+                .ResultAsync();
+
+            var obj = JObject.Parse(res).ToObject(typeof(UrlsResponseResult));
+            return obj as UrlsResponseResult;
         }
     }
 }

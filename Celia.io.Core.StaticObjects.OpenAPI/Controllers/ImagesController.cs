@@ -8,6 +8,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Celia.io.Core.MicroServices.Utilities;
 using Celia.io.Core.StaticObjects.Abstractions;
+using Celia.io.Core.StaticObjects.Abstractions.DTOs;
 using Celia.io.Core.StaticObjects.Models;
 using Celia.io.Core.StaticObjects.Services;
 using Microsoft.AspNetCore.Http;
@@ -204,6 +205,64 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
             {
                 _logger.LogError(new EventId(), ex, "Celia.io.Core.StaticObjects.WebAPI_Core.ImagesController.GetUrlAsync");
                 return new UrlResponseResult()
+                {
+                    Code = 500,
+                    Message = ex.Message,
+                };
+            }
+        }
+
+        [HttpPost("geturlsbysize")]
+        public async Task<UrlsResponseResult> GetUrlsAsync(
+            [FromHeader] [Required] string appid,
+            [FromBody] GetUrlsBySizeRequest request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return new UrlsResponseResult()
+                    {
+                        Code = (int)HttpStatusCode.BadRequest, //400
+                    };
+                }
+
+                int maxWidthHeight = 10000;
+                int percentage = 100;
+
+                if (request.MaxWidthHeight.HasValue)
+                {
+                    maxWidthHeight = request.MaxWidthHeight.Value;
+                }
+                if (request.Percentage.HasValue)
+                {
+                    percentage = request.Percentage.Value;
+                }
+
+                string[] array = new string[request.ObjectIds.Length];
+
+                Parallel.For(0, request.ObjectIds.Length, (i) =>
+                {
+                    var urlRes = _imageService.GetUrlAsync(
+                        request.ObjectIds[i],
+                        (MediaElementUrlType)request.Type, request.Format,
+                        maxWidthHeight, percentage);
+                    urlRes.Wait();
+
+                    array[i] = urlRes.Result;
+                }); 
+
+                return new UrlsResponseResult()
+                {
+                    Code = 200,
+                    Data = array,
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(new EventId(), ex,
+                    "Celia.io.Core.StaticObjects.WebAPI_Core.ImagesController.GetUrlsAsync");
+                return new UrlsResponseResult()
                 {
                     Code = 500,
                     Message = ex.Message,

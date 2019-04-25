@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Celia.io.Core.StaticObjects.Models
+namespace Celia.io.Core.StaticObjects.Abstractions.DTOs
 {
     public class AddImgRelationsEntity
     {

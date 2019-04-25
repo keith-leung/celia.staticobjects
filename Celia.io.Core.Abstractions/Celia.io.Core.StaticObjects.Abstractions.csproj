@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.2.1</Version>
+    <Version>0.3.0</Version>
     <Authors>Keith Leung</Authors>
     <Company>dotnet.ai</Company>
     <Product>Celia.io.Core.StaticObjects</Product>
@@ -17,7 +17,8 @@ This is a nuget package project for entities only.</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.3.0" />
+    <PackageReference Include="Celia.io.Core.MicroServices.Utilities" Version="0.2.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
   </ItemGroup>
 
 </Project>

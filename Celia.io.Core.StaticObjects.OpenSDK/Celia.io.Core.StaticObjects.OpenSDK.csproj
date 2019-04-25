@@ -2,13 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.2.1</Version>
+    <Version>0.3.0</Version>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Celia.io.Core.MicroServices.Utilities" Version="0.2.0" />
-    <PackageReference Include="Celia.io.Core.StaticObjects.Abstractions" Version="0.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Celia.io.Core.Abstractions\Celia.io.Core.StaticObjects.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>
