@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Celia.io.Core.StaticObjects.Abstractions;
 using Celia.io.Core.StaticObjects.Abstractions.Exceptions;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace Celia.io.Core.StaticObjects.Services.Impl
 {
@@ -99,6 +100,47 @@ namespace Celia.io.Core.StaticObjects.Services.Impl
                 storage, element.FilePath, element.GetFileName(), type, customStyleProcessStr);
 
             return url;
+        }
+
+        public async Task<string[]> GetUrlsAsync(string[] objectIds,
+            MediaElementUrlType type, string format, int maxWidthHeight, int percentage)
+        {
+            IEnumerable<ImageElement> imageElements 
+                = _repository.GetImagesById(objectIds).ToArray();
+
+            var storageIds = imageElements.Select(m => m.StorageId);
+
+            IEnumerable<Storage> storages 
+                = _repository.GetStoragesByIds(storageIds).ToArray(); 
+
+            List<string> urls = new List<string>();
+
+            foreach (var objId in objectIds)
+            {
+                ImageElement element = imageElements.FirstOrDefault(
+                    m => m.ObjectId.Equals(objId));
+                if (element == null)
+                {
+                    urls.Add(string.Empty);
+                    continue;
+                }
+
+                Storage storage = storages.FirstOrDefault(
+                    m => m.StorageId.Equals(element.StorageId));
+                if (storage == null)
+                {
+                    urls.Add(string.Empty);
+                    continue;
+                }
+
+                string url = _storageService.GetUrlByFormatSizeQuality(
+                    storage, element.FilePath, element.GetFileName(),
+                    type, format, maxWidthHeight, percentage);
+
+                urls.Add(url);
+            }
+
+            return urls.ToArray();
         }
 
         public async Task PublishAsync(string appId, string objectId)

@@ -239,18 +239,20 @@ namespace Celia.io.Core.StaticObjects.OpenAPI.Controllers
                     percentage = request.Percentage.Value;
                 }
 
-                string[] array = new string[request.ObjectIds.Length];
+                string[] array = await _imageService.GetUrlsAsync(request.ObjectIds,
+                    (MediaElementUrlType)request.Type, request.Format,
+                    maxWidthHeight, percentage);
 
-                Parallel.For(0, request.ObjectIds.Length, (i) =>
-                {
-                    var urlRes = _imageService.GetUrlAsync(
-                        request.ObjectIds[i],
-                        (MediaElementUrlType)request.Type, request.Format,
-                        maxWidthHeight, percentage);
-                    urlRes.Wait();
+                //Parallel.For(0, request.ObjectIds.Length, (i) =>
+                //{
+                //    var urlRes = _imageService.GetUrlAsync(
+                //        request.ObjectIds[i],
+                //        (MediaElementUrlType)request.Type, request.Format,
+                //        maxWidthHeight, percentage);
+                //    urlRes.Wait();
 
-                    array[i] = urlRes.Result;
-                }); 
+                //    array[i] = urlRes.Result;
+                //}); 
 
                 return new UrlsResponseResult()
                 {

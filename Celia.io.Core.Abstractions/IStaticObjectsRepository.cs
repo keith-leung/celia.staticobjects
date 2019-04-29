@@ -15,5 +15,7 @@ namespace Celia.io.Core.StaticObjects.Abstractions
         Task PublishAsync(ImageElement element);
         Task RevokePublishAsync(ImageElement element);
         ImageElement GetImageElementById(string objectId);
+        IEnumerable<ImageElement> GetImagesById(IEnumerable<string> objectIds);
+        IEnumerable<Storage> GetStoragesByIds(IEnumerable<string> storageIds);
     }
 }

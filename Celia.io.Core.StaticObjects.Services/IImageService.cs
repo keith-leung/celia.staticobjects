@@ -23,6 +23,10 @@ namespace Celia.io.Core.StaticObjects.Services
 
         Task<string> GetUrlCustomAsync(string objectId, MediaElementUrlType type, 
             string customStyleProcessStr);
+
+        Task<string[]> GetUrlsAsync(string[] objectIds, MediaElementUrlType type,
+            string format, int maxWidthHeight, int percentage);
+
         Task<string> AddImgRelationsAsync(string imgId, string objectId);
     }
 }

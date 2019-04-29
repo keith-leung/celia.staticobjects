@@ -251,5 +251,15 @@ namespace Celia.io.Core.StaticObjects.DataAccess
         {
             return _dbContext.ImageElements.Find(objectId);
         }
+
+        public IEnumerable<ImageElement> GetImagesById(IEnumerable<string> objectIds)
+        {
+            return _dbContext.ImageElements.Where(m => objectIds.Contains(m.ObjectId));
+        }
+
+        public IEnumerable<Storage> GetStoragesByIds(IEnumerable<string> storageIds)
+        {
+            return _dbContext.Storages.Where(m => storageIds.Contains(m.StorageId));
+        }
     }
 }
