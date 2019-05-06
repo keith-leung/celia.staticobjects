@@ -20,7 +20,7 @@ namespace ConsoleAppTester1
                 = new Celia.io.Core.StaticObjects.OpenSDK.ImageManager(
                     "http://localhost:54356/", 
                     //"https://imageylt.chinacloudsites.cn/",
-                "yltbook", "85959r9wz9r7rni9izo");
+                "yltbook", "85959r9wz9r7xxxxxx");
 
 //            var res0 = imgManager.Publish("5ca489dbab57e0625c8bc133");
 //            res0.Wait();
