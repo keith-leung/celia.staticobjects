@@ -70,7 +70,7 @@ namespace Celia.io.Core.StaticObjects.OpenAPI
                 {
                     cfg.Limits.MaxConcurrentConnections = 100;
                     cfg.Limits.MaxConcurrentUpgradedConnections = 100;
-                    cfg.Limits.MaxRequestBodySize = 10 * 1024;
+                    //cfg.Limits.MaxRequestBodySize = 10 * 1024;
                     cfg.Limits.MinRequestBodyDataRate =
                         new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
                     cfg.Limits.MinResponseDataRate =
