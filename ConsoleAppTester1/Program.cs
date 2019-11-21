@@ -18,9 +18,10 @@ namespace ConsoleAppTester1
         {
             Celia.io.Core.StaticObjects.OpenSDK.ImageManager imgManager
                 = new Celia.io.Core.StaticObjects.OpenSDK.ImageManager(
-                    "http://localhost:54356/", 
-                    //"https://imageylt.chinacloudsites.cn/",
-                "yltbook", "85959r9wz9r7xxxxxx");
+                    //"http://139.198.122.46:40020",
+                    //"http://localhost:63980/", 
+                    "https://open.celia.io:9021/",
+                "yltbook", "85959r9wz9r7rni9izo");
 
 //            var res0 = imgManager.Publish("5ca489dbab57e0625c8bc133");
 //            res0.Wait();
@@ -41,9 +42,9 @@ namespace ConsoleAppTester1
             //res3.Wait();
 
 
-            using (StreamReader reader = new StreamReader(@"D:\OneDrive\TAR.MASSIVE\TIM截图20190311163250.png"))
+            using (StreamReader reader = new StreamReader(@"d:\Pictures\代煎数据库日志.png"))
             {
-                var res1 = imgManager.UploadImg(reader.BaseStream, "bzgsoft", "image1", "png");
+                var res1 = imgManager.UploadImg(reader.BaseStream, "bzgsoft", "T代煎数据库日志", "png");
                 res1.Wait();
                 Console.WriteLine(JObject.FromObject(res1.Result).ToString());
             }

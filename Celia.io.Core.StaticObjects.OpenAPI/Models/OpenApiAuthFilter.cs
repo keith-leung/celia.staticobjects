@@ -51,14 +51,21 @@ namespace Celia.io.Core.StaticObjects.Models
                 long ts = long.Parse(tsStr);
 
                 var asyncResult = _authService.CheckAuthAsync(
-                    appid, ts, sign, context.HttpContext.Request.Path.Value);
+                    appid, ts, sign, context.HttpContext.Request.Path.Value.Trim('/'));
                 asyncResult.Wait();
 
                 ResponseResult<string> authResult = asyncResult.Result;
                 if (authResult.Code != 200)
                 {
-                    context.Result = new JsonResult(authResult);
-                    return;
+                    asyncResult = _authService.CheckAuthAsync(
+                        appid, ts, sign, context.HttpContext.Request.Path.Value);
+                    asyncResult.Wait();
+                    //双重验证，不管Path有没有带斜杠在前
+                    if (authResult.Code != 200)
+                    {
+                        context.Result = new JsonResult(authResult);
+                        return;
+                    }
                 }
             }
             catch (Exception ex)
